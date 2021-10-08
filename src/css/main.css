@@ -1,0 +1,13 @@
+body {
+  background: gray;
+}
+.box {
+  width: 400px;
+  height: 400px;
+  background: url("../images/1.jpg");
+}
+.i {
+  width: 30px;
+  height: 30px;
+  background: url("../images/2.jpg");
+}

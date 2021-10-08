@@ -1,0 +1,9 @@
+body {
+  background: gray; /*  url("images/1.jpg"); */
+}
+.box {
+  background: red url("images/2.jpg"); /* */
+}
+.iconfont {
+  color: red;
+}

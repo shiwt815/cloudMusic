@@ -1,0 +1,126 @@
+<template>
+  <div class="newstmv-wrap">
+    <div class="list-nav-tl">
+      <div class="list-nav-m">
+        <span>地区：</span>
+        <!-- <a href="#" class="gn-a active"></a> -->
+        <a
+          href="#"
+          class="gn-a"
+          :class="index == areanum ? 'active' : ''"
+          v-for="(item, index) of area"
+          :key="index"
+          @click="goarea(index)"
+        >{{ item }}</a>
+        <!-- <a href="#" class="gn-a"></a> -->
+      </div>
+      <div class="list-nav-m">
+        <span>类型：</span>
+        <a
+          href="#"
+          class="gn-a"
+          :class="index == typenum ? 'active' : ''"
+          v-for="(item, index) of type"
+          :key="index"
+          @click="gotype(index)"
+        >{{ item }}</a>
+      </div>
+      <div class="list-nav-m">
+        <span>排序：</span>
+        <a
+          href="#"
+          class="gn-a"
+          :class="index == ordernum ? 'active' : ''"
+          v-for="(item, index) of order"
+          :key="index"
+          @click="goorder(index)"
+        >{{ item }}</a>
+      </div>
+    </div>
+    <div class="mv-list">
+      <div class="mv" v-for="(item, index) of nestMVList" :key="index" @click="goMvDetail(item.id)">
+        <div class="play-num">
+          <i class="san"></i>
+        </div>
+        <img :src="item.cover" alt class="mv-img" />
+        <span class="playcount">{{ item.playCount }}</span>
+        <a href="#" class="mv-name">{{ item.name }}</a>
+        <a href="#" class="artits-name">{{ item.artistName }}</a>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+
+export default {
+  name: "newestmv",
+  data() {
+    return {
+      nestMVList: [],
+      areanum: 0,
+      typenum: 0,
+      ordernum: 0,
+      //地区
+      area: ["全部", "内地", "港台", "欧美", "日本", "韩国"],
+      // ["全部","内地","港台","欧美","日本","韩国"]
+      //类型
+      type: ["全部", "官方版", "原声", "现场版", "网易出品"],
+      //排序
+      order: ["上升最快", "最热", "最新"],
+      //最大量
+      limit: "10",
+      //偏移量
+      page: 1
+    };
+  },
+  created() {
+    this.mvData();
+  },
+  methods: {
+    mvData() {
+      axios({
+        url: "https://autumnfish.cn/mv/all",
+        method: "get",
+        params: {
+          area: this.area[this.areanum],
+          type: this.type[this.typenum],
+          //排序
+          order: this.order[this.ordernum],
+          //最大量
+          limit: 4,
+          //偏移量
+          page: 1
+        }
+      }).then(res => {
+        this.nestMVList = res.data.data;
+        for (var i = 0; i < this.nestMVList.length; i++) {
+          if (this.nestMVList[i].playCount > 10000) {
+            this.nestMVList[i].playCount =
+              parseInt(this.nestMVList[i].playCount / 10000) + "万";
+          }
+        }
+      });
+    },
+    goarea(index) {
+      this.areanum = index;
+      this.mvData();
+    },
+    gotype(index) {
+      this.typenum = index;
+      this.mvData();
+    },
+    goorder(index) {
+      this.typenum = index;
+      this.mvData();
+    },
+
+    //跳转mv详情页
+    goMvDetail(id) {
+      console.log(id);
+      this.$router.push("/mvdetail?mvid=" + id);
+    }
+  }
+};
+</script>
