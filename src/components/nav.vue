@@ -1,5 +1,5 @@
 <template>
-  <div class="template-box">
+  <div class="nav-wrap">
     <div class="nav">
       <a
         href="#"
@@ -8,15 +8,13 @@
         v-for="nav of navMenu"
         :key="nav.id"
         @click="goto(nav.path, nav.id)"
-        >{{ nav.name }}</a
-      >
+      >{{ nav.name }}</a>
     </div>
-    <router-view></router-view>
   </div>
 </template>
 <script>
 export default {
-  name: "Head",
+  name: "Nav",
   data() {
     return {
       index: 1,
@@ -24,7 +22,7 @@ export default {
         {
           id: 1,
           name: "首页",
-          path: "/"
+          path: "/home"
         },
         {
           id: 3,

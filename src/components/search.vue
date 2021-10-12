@@ -1,14 +1,17 @@
 <template>
   <div class="search-wrap">
     <div class="search-box">
-      <i class="i-search"></i>
-      <input
-        type="text"
-        class="search-text"
-        v-model="searchValue"
-        @keyup.enter="goResult()"
-      />
-      <i class="i-close">x</i>
+      <a href="#" class="search-i">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-sousuo" />
+        </svg>
+      </a>
+      <input type="text" class="search-text" v-model="searchValue" @keyup.enter="goResult()" />
+      <a href="#" class="search-x">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-guanbishixin" />
+        </svg>
+      </a>
     </div>
   </div>
 </template>

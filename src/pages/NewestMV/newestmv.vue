@@ -3,7 +3,6 @@
     <div class="list-nav-tl">
       <div class="list-nav-m">
         <span>地区：</span>
-        <!-- <a href="#" class="gn-a active"></a> -->
         <a
           href="#"
           class="gn-a"
@@ -12,7 +11,6 @@
           :key="index"
           @click="goarea(index)"
         >{{ item }}</a>
-        <!-- <a href="#" class="gn-a"></a> -->
       </div>
       <div class="list-nav-m">
         <span>类型：</span>
@@ -39,11 +37,13 @@
     </div>
     <div class="mv-list">
       <div class="mv" v-for="(item, index) of nestMVList" :key="index" @click="goMvDetail(item.id)">
-        <div class="play-num">
-          <i class="san"></i>
+        <div class="img-posr">
+          <div class="play-num">
+            <i class="san"></i>
+          </div>
+          <img :src="item.cover" alt class="mv-img" />
+          <span class="play-num">播放量：{{ item.playCount }}</span>
         </div>
-        <img :src="item.cover" alt class="mv-img" />
-        <span class="playcount">{{ item.playCount }}</span>
         <a href="#" class="mv-name">{{ item.name }}</a>
         <a href="#" class="artits-name">{{ item.artistName }}</a>
       </div>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 
 export default {
   name: "newestmv",
@@ -64,7 +64,6 @@ export default {
       ordernum: 0,
       //地区
       area: ["全部", "内地", "港台", "欧美", "日本", "韩国"],
-      // ["全部","内地","港台","欧美","日本","韩国"]
       //类型
       type: ["全部", "官方版", "原声", "现场版", "网易出品"],
       //排序
@@ -80,28 +79,32 @@ export default {
   },
   methods: {
     mvData() {
-      axios({
-        url: "https://autumnfish.cn/mv/all",
-        method: "get",
-        params: {
-          area: this.area[this.areanum],
-          type: this.type[this.typenum],
-          //排序
-          order: this.order[this.ordernum],
-          //最大量
-          limit: 4,
-          //偏移量
-          page: 1
-        }
-      }).then(res => {
-        this.nestMVList = res.data.data;
-        for (var i = 0; i < this.nestMVList.length; i++) {
-          if (this.nestMVList[i].playCount > 10000) {
-            this.nestMVList[i].playCount =
-              parseInt(this.nestMVList[i].playCount / 10000) + "万";
+      this.$http
+        .get("/mv/all", {
+          params: {
+            area: this.area[this.areanum],
+            type: this.type[this.typenum],
+            //排序
+            order: this.order[this.ordernum],
+            //最大量
+            limit: 4,
+            //偏移量
+            page: 1
           }
-        }
-      });
+        })
+        .then(res => {
+          this.nestMVList = res.data.data;
+          for (var i = 0; i < this.nestMVList.length; i++) {
+            if (this.nestMVList[i].playCount > 10000) {
+              this.nestMVList[i].playCount = this.playCount(
+                this.nestMVList[i].playCount
+              );
+            }
+          }
+        })
+        .catch(err => {
+          alert("请求失败");
+        });
     },
     goarea(index) {
       this.areanum = index;

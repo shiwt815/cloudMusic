@@ -1,13 +1,15 @@
 <template>
   <div class="goodsonglist-box">
     <div class="goodsonglist-top">
-      <img :src="goodsonglist.coverImgUrl" alt="" class="group-img" />
+      <img :src="goodsonglist.coverImgUrl" alt class="group-img" />
       <div class="goodsonglist-tr">
-        <span class="bage">精品歌单</span>
-        <h3 class="group-t">{{ goodsonglist.name }}</h3>
+        <h3 class="group-t">
+          <span class="bage">精品歌单</span>
+          {{ goodsonglist.name }}
+        </h3>
         <p class="group-p">{{ goodsonglist.description }}</p>
       </div>
-      <img :src="goodsonglist.coverImgUrl" alt="" class="group-bj" />
+      <img :src="goodsonglist.coverImgUrl" alt class="group-bj" />
     </div>
     <div class="goodsonglist-nav">
       <a
@@ -17,15 +19,14 @@
         v-for="(item, index) of stylelist"
         :key="index"
         @click="gosonglist(index)"
-        >{{ item }}</a
-      >
+      >{{ item }}</a>
     </div>
     <div class="goodsonglist-con">
       <div class="goodsong" v-for="(item, index) of songlist" :key="index">
-        <div class="goodsong-box">
+        <div class="img-posr">
           <span class="play-num">播放量：{{ item.commentCount }}</span>
-          <a href="#" class="a-play">播放</a>
-          <img :src="item.coverImgUrl" alt="" class="goodsong-img" />
+          <a href="#" class="a-play" @click="gosonglistdetail(item.id)">播放</a>
+          <img :src="item.coverImgUrl" alt class="goodsong-img" />
         </div>
         <p class="goodsong-name">{{ item.name }}</p>
       </div>
@@ -39,8 +40,7 @@
         :key="index"
         @click="gopagenum(index)"
         :class="pnum == index ? 'active' : ''"
-        >{{ item }}</a
-      >
+      >{{ item }}</a>
       <a href="#" class="a-next">下一页</a>
       <span class="total">共{{ total }}条</span>
       <span>每页显示4条</span>
@@ -49,8 +49,6 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-
 export default {
   name: "resongList",
   data() {
@@ -83,42 +81,47 @@ export default {
   created() {
     this.topData();
     this.listData();
-    // var pagesize = Math.ceil(this.total / 4);
-    // console.log(this.total);
   },
   watch: {},
   methods: {
     topData() {
-      axios({
-        url: "https://autumnfish.cn/top/playlist/highquality",
-        method: "get",
-        params: {
-          limit: 1,
-          cat: this.stylelist[this.epnum]
-        }
-      }).then(res => {
-        this.goodsonglist = res.data.playlists[0];
-      });
+      this.$http
+        .get("/top/playlist/highquality", {
+          params: { limit: 1, cat: this.stylelist[this.epnum] }
+        })
+        .then(res => {
+          this.goodsonglist = res.data.playlists[0];
+        })
+        .catch(err => {
+          alert("请求失败");
+        });
     },
     listData(pnum) {
-      axios({
-        url: "https://autumnfish.cn/top/playlist",
-        method: "get",
-        params: {
-          limit: 4,
-          cat: this.stylelist[this.epnum],
-          offset: this.pnum * 4
-        }
-      }).then(res => {
-        this.songlist = res.data.playlists;
-        this.total = res.data.total;
-      });
+      this.$http
+        .get("top/playlist", {
+          params: {
+            limit: 4,
+            cat: this.stylelist[this.epnum],
+            offset: this.pnum * 4
+          }
+        })
+        .then(res => {
+          this.songlist = res.data.playlists;
+          this.total = res.data.total;
+        })
+        .catch(err => {
+          alert("请求失败");
+        });
     },
+    //分类选择
     gosonglist(num) {
       this.epnum = num;
-      //   console.log(this.stylelist[num]);
       this.topData();
       this.listData();
+    },
+    //跳转歌曲详情页
+    gosonglistdetail(id) {
+      this.$router.push("/songlistdetail?q=" + id);
     },
     page() {
       this.listData();
@@ -137,8 +140,6 @@ export default {
       }
     }
   },
-  mounted() {
-    // console.log(this.pagesize);
-  }
+  mounted() {}
 };
 </script>

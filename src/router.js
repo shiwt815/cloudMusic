@@ -1,9 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import App from "./App.vue";
-// important
-
-// import t1 from "./components/this.vue";
 
 Vue.use(VueRouter);
 
@@ -17,28 +14,35 @@ var router = new VueRouter({
   routes: [
     {
       path: "/",
-      name: "Home",
-      component: () => import("./pages/Home/home.vue")
-    },
-    {
-      path: "/result",
-      name: "result",
-      component: () => import("./pages/result/result.vue")
-    },
-    {
-      path: "/resonglist",
-      name: "ResongList",
-      component: () => import("./pages/ResongList/resonglist.vue")
-    },
-    {
-      path: "/newestmusic",
-      name: "NewestMusic",
-      component: () => import("./pages/NewestMusic/newestmusic.vue")
-    },
-    {
-      path: "/newestmv",
-      name: "newestmv",
-      component: () => import("./pages/NewestMV/newestmv.vue")
+      name: "index",
+      component: () => import("./pages/Index/index.vue"),
+      children: [
+        {
+          path: "",
+          name: "home",
+          component: () => import("./pages/Home/home.vue")
+        },
+        {
+          path: "resonglist",
+          name: "resonglist",
+          component: () => import("./pages/ResongList/resonglist.vue")
+        },
+        {
+          path: "newestmusic",
+          name: "newestmusic",
+          component: () => import("./pages/NewestMusic/newestmusic.vue")
+        },
+        {
+          path: "newestmv",
+          name: "newestmv",
+          component: () => import("./pages/NewestMv/newestmv.vue")
+        },
+        {
+          path: "/result",
+          name: "result",
+          component: () => import("./pages/result/result.vue")
+        }
+      ]
     },
     {
       path: "/songlistdetail",
@@ -49,6 +53,11 @@ var router = new VueRouter({
       path: "/mvdetail",
       name: "mvdetail",
       component: () => import("./pages/MvDetail/mvdetail.vue")
+    },
+
+    {
+      path: "*",
+      redirect: "/"
     }
   ]
 });
