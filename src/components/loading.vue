@@ -1,5 +1,7 @@
 <template>
-  <div class="loading"><span>loading...</span></div>
+  <div class="loading">
+    <span>loading...</span>
+  </div>
 </template>
 
 <script>
@@ -13,14 +15,14 @@ export default {
 .loading {
   position: relative;
   margin: 150px auto;
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   border-top: 10px solid red;
   border-radius: 50%;
   z-index: 1000;
   animation: loadRotate 2s linear infinite;
   text-align: center;
-  line-height: 200px;
+  line-height: 100px;
 }
 
 .loading:before,
