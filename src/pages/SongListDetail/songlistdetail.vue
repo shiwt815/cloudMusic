@@ -1,15 +1,12 @@
 <template>
   <div class="songlistdetail-wrap">
+    <Loading v-if="isLoading"></Loading>
     <div class="goodsonglist-top">
       <img v-lazy="playlistdetail.coverImgUrl" alt class="group-img" />
       <div class="goodsonglist-tr">
         <h2 class="group-t">{{ playlistdetail.name }}</h2>
         <div class="user-p">
-          <img
-            v-lazy="playlistdetail.creator.avatarUrl"
-            alt
-            class="user-head"
-          />
+          <img v-lazy="playlistdetail.creator.avatarUrl" alt class="user-head" />
           <span class="user-name">{{ playlistdetail.creator.nickname }}</span>
           <span class="creat-time">{{ playlistdetail.createTime }}</span>
           <a href="#" class="play-btn">
@@ -19,12 +16,7 @@
         </div>
         <div class="sld-p">
           <span>标签：</span>
-          <span
-            class="tag"
-            v-for="(item, index) of playlistdetail.tags"
-            :key="index"
-            >{{ item }}</span
-          >
+          <span class="tag" v-for="(item, index) of playlistdetail.tags" :key="index">{{ item }}</span>
         </div>
         <div class="sld-p">
           <span>简介：</span>
@@ -39,15 +31,13 @@
           class="t-t"
           :class="{ active: itemActive == 1 }"
           @click="goTabItem(1)"
-          >歌曲列表</a
-        >
+        >歌曲列表</a>
         <a
           href="javascript:;"
           class="t-t"
           :class="{ active: itemActive == 2 }"
           @click="goTabItem(2)"
-          >评论({{ hotComments.length }})</a
-        >
+        >评论({{ hotComments.length }})</a>
       </div>
       <div class="music-table-box" v-if="itemActive == 1">
         <div class="music-th">
@@ -59,6 +49,7 @@
           <span class="time music-td">发布时间</span>
         </div>
 
+        <Loading v-if="isLoading"></Loading>
         <div
           class="music-tr"
           v-for="(item, index) of playlistdetail.tracks"
@@ -75,12 +66,7 @@
           </div>
           <div class="music-dl music-td">
             <h2 class="music-name">{{ item.name }}</h2>
-            <a
-              href="javascript:;"
-              class="a-mv"
-              v-if="item.mv != 0"
-              @click="goplaymv()"
-            ></a>
+            <a href="javascript:;" class="a-mv" v-if="item.mv != 0" @click="goplaymv()"></a>
             <p class="word-small">{{ item.alia }}</p>
           </div>
           <div class="music-artisit music-td">{{ item.ar[0].name }}</div>
@@ -89,14 +75,11 @@
         </div>
       </div>
       <div class="comments-wrap" v-if="itemActive == 2">
+        <Loading v-if="isLoading"></Loading>
         <div class="comments-box">
           <h2 class="index-ht">热门评论（{{ hotcount }}）</h2>
           <ul class="comments-ul">
-            <li
-              class="comments-li"
-              v-for="(item, index) of hotComments"
-              :key="index"
-            >
+            <li class="comments-li" v-for="(item, index) of hotComments" :key="index">
               <div class="comments">
                 <img v-lazy="item.user.avatarUrl" alt class="user-head" />
                 <span class="user-name">{{ item.user.nickname }}</span>
@@ -118,11 +101,7 @@
         <div class="comments-box">
           <h2 class="index-ht">最新评论（{{ newcount }}）</h2>
           <ul class="comments-ul">
-            <li
-              class="comments-li"
-              v-for="(item, index) of newComments"
-              :key="index"
-            >
+            <li class="comments-li" v-for="(item, index) of newComments" :key="index">
               <div class="comments">
                 <img v-lazy="item.user.avatarUrl" alt class="user-head" />
                 <span class="user-name">{{ item.user.nickname }}</span>
@@ -147,11 +126,14 @@
 </template>
 <script>
 // import axios from "axios";
+import Loading from "../../components/Loading.vue";
 
 export default {
   name: "songlistdetail",
+  components: { Loading },
   data() {
     return {
+      isLoading: true,
       itemActive: 1,
       playlistdetail: [],
       hotComments: [],
@@ -173,6 +155,9 @@ export default {
           var ok = this.dateShow(this.playlistdetail.tracks[i].publishTime);
           this.playlistdetail.tracks[i].publishTime = ok;
         }
+        if (res.data.code == 200) {
+          this.isLoading = false;
+        }
       })
       .catch(err => {
         alert("请求失败");
@@ -192,6 +177,9 @@ export default {
         for (var i = 0; i < this.hotComments.length; i++) {
           this.hotComments[i].time = this.dateShow(this.hotComments[i].time);
         }
+        if (res.data.code == 200) {
+          this.isLoading = false;
+        }
       })
       .catch(err => {
         alert("请求失败");
@@ -210,6 +198,9 @@ export default {
 
         for (var i = 0; i < this.newComments.length; i++) {
           this.newComments[i].time = this.dateShow(this.newComments[i].time);
+        }
+        if (res.data.code == 200) {
+          this.isLoading = false;
         }
       })
       .catch(err => {
