@@ -6,61 +6,69 @@
         <video :src="mvurl" controls="controls" />
       </div>
       <div class="artitis-box">
-        <img :src="mvdetail.cover" alt class="user-head" />
-        <span class="user-name">{{mvdetail.artistName}}</span>
+        <img v-lazy="mvdetail.cover" alt class="user-head" />
+        <span class="user-name">{{ mvdetail.artistName }}</span>
       </div>
       <div class="mvdetail-box">
-        <h1 class="mv-name">{{mvdetail.name}}</h1>
+        <h1 class="mv-name">{{ mvdetail.name }}</h1>
         <div class="word-smLL">
           <span>发布</span>
-          <span>{{mvdetail.publishTime}}</span>
+          <span>{{ mvdetail.publishTime }}</span>
           <span>播放</span>
-          <span>{{mvdetail.playCount}}次</span>
+          <span>{{ mvdetail.playCount }}次</span>
         </div>
-        <p class="mvdetail-p">{{mvdetail.desc}}</p>
+        <p class="mvdetail-p">{{ mvdetail.desc }}</p>
       </div>
 
       <div class="comments-wrap">
         <div class="comments-box">
-          <h2 class="index-ht">热门评论（{{hotcomment.length}}）</h2>
+          <h2 class="index-ht">热门评论（{{ hotcomment.length }}）</h2>
           <ul class="comments-ul">
-            <li class="comments-li" v-for="(item,index) of hotcomment" :key="index">
+            <li
+              class="comments-li"
+              v-for="(item, index) of hotcomment"
+              :key="index"
+            >
               <div class="comments">
-                <img :src="item.user.avatarUrl" alt class="user-head" />
-                <span class="user-name">{{item.user.nickname}}</span>
-                <p class="comments-p">{{item.content}}</p>
+                <img v-lazy="item.user.avatarUrl" alt class="user-head" />
+                <span class="user-name">{{ item.user.nickname }}</span>
+                <p class="comments-p">{{ item.content }}</p>
                 <div
                   class="reply-box"
-                  v-if="item.beReplied.length!=0"
-                  v-for="(item1,index) of item.beReplied"
+                  v-if="item.beReplied.length != 0"
+                  v-for="(item1, index) of item.beReplied"
                   :key="index"
                 >
-                  <span class="user-name">{{item1.user.nickname}}</span>
-                  <div class="reply-p">{{item1.content}}</div>
+                  <span class="user-name">{{ item1.user.nickname }}</span>
+                  <div class="reply-p">{{ item1.content }}</div>
                 </div>
-                <div class="comments-time">{{item.time}}</div>
+                <div class="comments-time">{{ item.time }}</div>
               </div>
             </li>
           </ul>
         </div>
         <div class="comments-box">
-          <h2 class="index-ht">最新评论（{{comment.length}}）</h2>
+          <h2 class="index-ht">最新评论（{{ comment.length }}）</h2>
           <ul class="comments-ul">
-            <li class="comments-li" v-for="(item,index) of comment" :key="index">
+            <li
+              class="comments-li"
+              v-for="(item, index) of comment"
+              :key="index"
+            >
               <div class="comments">
-                <img :src="item.user.avatarUrl" alt class="user-head" />
-                <span class="user-name">{{item.user.nickname}}</span>
-                <p class="comments-p">{{item.content}}</p>
+                <img v-lazy="item.user.avatarUrl" alt class="user-head" />
+                <span class="user-name">{{ item.user.nickname }}</span>
+                <p class="comments-p">{{ item.content }}</p>
                 <div
                   class="reply-box"
-                  v-if="item.beReplied.length!=0"
-                  v-for="(item1,index) of item.beReplied"
+                  v-if="item.beReplied.length != 0"
+                  v-for="(item1, index) of item.beReplied"
                   :key="index"
                 >
-                  <span class="user-name">{{item1.user.nickname}}</span>
-                  <div class="reply-p">{{item1.content}}</div>
+                  <span class="user-name">{{ item1.user.nickname }}</span>
+                  <div class="reply-p">{{ item1.content }}</div>
                 </div>
-                <div class="comments-time">{{item.time}}</div>
+                <div class="comments-time">{{ item.time }}</div>
               </div>
             </li>
           </ul>
@@ -70,14 +78,19 @@
     <div class="mvdetail-right">
       <h1 class="mv-title">相关推荐</h1>
       <div class="mv-list">
-        <div class="mv" v-for="(item2,index) of mvabout" :key="index" @click="goMvDetail(item2.id)">
+        <div
+          class="mv"
+          v-for="(item2, index) of mvabout"
+          :key="index"
+          @click="goMvDetail(item2.id)"
+        >
           <div class="img-posr">
-            <span class="play-num">播放量：{{item2.playCount }}</span>
-            <img :src="item2.cover" alt class="mv-img" />
-            <a href="#" class="mv-time">{{item2.duration }}</a>
+            <span class="play-num">播放量：{{ item2.playCount }}</span>
+            <img v-lazy="item2.cover" alt class="mv-img" />
+            <a href="#" class="mv-time">{{ item2.duration }}</a>
           </div>
-          <a href="#" class="mv-name">{{item2.name}}</a>
-          <a href="#" class="artits-name">{{item2.artistName}}</a>
+          <a href="#" class="title-name">{{ item2.name }}</a>
+          <a href="#" class="word-small">{{ item2.artistName }}</a>
         </div>
       </div>
     </div>

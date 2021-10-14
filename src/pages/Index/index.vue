@@ -1,9 +1,9 @@
 <template>
   <div class="h100">
     <Nav />
-    <div class="right-content">
+    <el-scrollbar class="right-content">
       <router-view />
-    </div>
+    </el-scrollbar>
   </div>
 </template>
 <script>

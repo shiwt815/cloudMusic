@@ -2,13 +2,19 @@
   <div id="app">
     <div class="top">
       <div class="wrap">
-        <a href="javascript:;" class="return-a" @click="goReturn()" v-show="isShow">返回</a>
+        <a
+          href="javascript:;"
+          class="return-a"
+          @click="goReturn()"
+          v-show="isShow"
+          >返回</a
+        >
         <Search />
       </div>
     </div>
-    <div class="content">
+    <el-scrollbar class="content">
       <router-view ref="child" />
-    </div>
+    </el-scrollbar>
 
     <div class="bottom">
       <div class="player">
@@ -61,4 +67,3 @@ export default {
   }
 };
 </script>
-

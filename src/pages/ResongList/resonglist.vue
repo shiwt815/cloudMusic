@@ -1,7 +1,7 @@
 <template>
   <div class="goodsonglist-box">
     <div class="goodsonglist-top">
-      <img :src="goodsonglist.coverImgUrl" alt class="group-img" />
+      <img v-lazy="goodsonglist.coverImgUrl" alt class="group-img" />
       <div class="goodsonglist-tr">
         <h3 class="group-t">
           <span class="bage">精品歌单</span>
@@ -9,7 +9,7 @@
         </h3>
         <p class="group-p">{{ goodsonglist.description }}</p>
       </div>
-      <img :src="goodsonglist.coverImgUrl" alt class="group-bj" />
+      <img v-lazy="goodsonglist.coverImgUrl" alt class="group-bj" />
     </div>
     <div class="goodsonglist-nav">
       <a
@@ -19,19 +19,20 @@
         v-for="(item, index) of stylelist"
         :key="index"
         @click="gosonglist(index)"
-      >{{ item }}</a>
+        >{{ item }}</a
+      >
     </div>
     <div class="goodsonglist-con">
       <div class="goodsong" v-for="(item, index) of songlist" :key="index">
         <div class="img-posr">
           <span class="play-num">播放量：{{ item.commentCount }}</span>
           <a href="#" class="a-play" @click="gosonglistdetail(item.id)">播放</a>
-          <img :src="item.coverImgUrl" alt class="goodsong-img" />
+          <img v-lazy="item.coverImgUrl" alt class="goodsong-img" />
         </div>
-        <p class="goodsong-name">{{ item.name }}</p>
+        <p class="title-name">{{ item.name }}</p>
       </div>
     </div>
-    <div class="pagenav">
+    <!-- <div class="pagenav">
       <a href="#" class="a-pre" @click="page()">上一页</a>
       <a
         href="#"
@@ -45,7 +46,15 @@
       <span class="total">共{{ total }}条</span>
       <span>每页显示4条</span>
       <span class="pagesize">共{{ pagesize }}页</span>
-    </div>
+    </div> -->
+    <el-pagination
+      @current-change="handleCurrentChange"
+      :current-page.sync="page"
+      :page-size="limit - 1"
+      layout="total, prev, pager, next"
+      :total="total"
+    >
+    </el-pagination>
   </div>
 </template>
 <script>
@@ -72,10 +81,13 @@ export default {
         "治愈",
         "旅行"
       ],
+      limit: 12,
       total: null, //总数
-      pagesize: 0, //页数
-      pagenum: [],
-      pnum: 0
+      //偏移量
+      page: 1
+      // pagesize: 0, //页数
+      // pagenum: [],
+      // pnum: 0
     };
   },
   created() {
@@ -100,9 +112,12 @@ export default {
       this.$http
         .get("top/playlist", {
           params: {
-            limit: 4,
             cat: this.stylelist[this.epnum],
-            offset: this.pnum * 4
+            //最大量
+            limit: this.limit,
+            //偏移量
+            // page: this.page,
+            offset: (this.page - 1) * this.limit
           }
         })
         .then(res => {
@@ -123,22 +138,28 @@ export default {
     gosonglistdetail(id) {
       this.$router.push("/songlistdetail?q=" + id);
     },
-    page() {
+    //分页
+    handleCurrentChange(val) {
+      this.page = val;
       this.listData();
-      var pagesize = Math.ceil(this.total / 4);
-      this.pagesize = pagesize;
-      //获取页数
-      for (var i = 1; i <= pagesize; i++) {
-        this.pagenum.push(i);
-      }
-    },
-    gopagenum(index) {
-      this.pnum = index;
-      this.listData(index);
-      if (index > 3) {
-        this.listData[index + 2];
-      }
+      // console.log("pagenum", val);
     }
+    // page() {
+    //   this.listData();
+    //   var pagesize = Math.ceil(this.total / 4);
+    //   this.pagesize = pagesize;
+    //   //获取页数
+    //   for (var i = 1; i <= pagesize; i++) {
+    //     this.pagenum.push(i);
+    //   }
+    // },
+    // gopagenum(index) {
+    //   this.pnum = index;
+    //   this.listData(index);
+    //   if (index > 3) {
+    //     this.listData[index + 2];
+    //   }
+    // }
   },
   mounted() {}
 };

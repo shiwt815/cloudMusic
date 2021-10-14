@@ -6,24 +6,24 @@
       <div class="song" v-for="(item, index) of songList" :key="index">
         <div class="img-posr">
           <i class="picwrite">{{ item.copywriter }}</i>
-          <img :src="item.picUrl" alt class="song-img" />
+          <img v-lazy="item.picUrl" alt class="song-img" />
           <a href="#" class="a-play" @click="gosonglistdetail(item.id)">播放</a>
         </div>
-        <a href="#" class="song-name">{{ item.name }}</a>
+        <a href="#" class="title-name">{{ item.name }}</a>
       </div>
     </div>
     <h1 class="index-ht">最新音乐</h1>
     <div class="new-list">
       <div class="new" v-for="(item, index) of newMusicList" :key="index">
         <div class="img-posr">
-          <img :src="item.picUrl" alt class="new-img" />
-          <a href="javascript:;" class="a-play" @click="playMusic(item.id)">播放</a>
+          <img v-lazy="item.picUrl" alt class="new-img" />
+          <a href="javascript:;" class="a-play" @click="playMusic(item.id)"
+            >播放</a
+          >
         </div>
-        <a href="javascript:;" class="new-name">{{ item.name }}</a>
-        <a href="javascript:;" class="songer">
-          {{
-          item.song.artists[0].name
-          }}
+        <a href="javascript:;" class="title-name">{{ item.name }}</a>
+        <a href="javascript:;" class="word-small">
+          {{ item.song.artists[0].name }}
         </a>
       </div>
     </div>
@@ -39,10 +39,9 @@
         <div class="img-posr">
           <i class="picwrite">{{ item.copywriter }}</i>
           <div class="play-num">播放量：{{ item.playCount }}</div>
-          <img :src="item.picUrl" alt class="mv-img" />
+          <img v-lazy="item.picUrl" alt class="mv-img" />
         </div>
-        <a href="#" class="mv-group">{{ item.name }}</a>
-        <a href="#" class="artits-name">{{ item.artistName }}</a>
+        <a href="#" class="title-name">{{ item.name }}</a>
       </div>
     </div>
   </div>
@@ -113,7 +112,8 @@ export default {
         })
         .then(res => {
           let url = res.data.data[0].url;
-          this.$parent.$parent.musicUrl = url;
+          this.$parent.$parent.$parent.$parent.musicUrl = url;
+          console.log(url);
         })
         .catch(err => {
           alert("请求失败");

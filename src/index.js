@@ -7,6 +7,21 @@ import router from "./router";
 import "./js/iconfont.js";
 import axios from "./httpConfig/http";
 Vue.prototype.$http = axios;
+//element
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+Vue.use(ElementUI);
+// 图片懒加载
+import VueLazyload from "vue-lazyload";
+// 使用方法1:
+// Vue.use(VueLazyload)
+// 使用方法2: 自定义参数选项配置
+Vue.use(VueLazyload, {
+  preLoad: 1.3, // 提前加载高度（数字 1 表示 1 屏的高度） 默认值:1.3
+  error: require("./images/error.jpg"), // 当加载图片失败的时候
+  loading: require("./images/load.gif"), // 图片加载状态下显示的图片
+  attempt: 3 //  加载错误后最大尝试次数 默认值:3
+});
 
 //播放时长
 Vue.prototype.mvTime = function(Time) {
@@ -52,11 +67,3 @@ var vm = new Vue({
   router
   // store
 });
-
-// console.log(1);
-
-// const spp = function() {
-//   console.log(1);
-// };
-
-// new spp();

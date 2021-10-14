@@ -10,7 +10,8 @@
           v-for="(item, index) of area"
           :key="index"
           @click="goarea(index)"
-        >{{ item }}</a>
+          >{{ item }}</a
+        >
       </div>
       <div class="list-nav-m">
         <span>类型：</span>
@@ -21,7 +22,8 @@
           v-for="(item, index) of type"
           :key="index"
           @click="gotype(index)"
-        >{{ item }}</a>
+          >{{ item }}</a
+        >
       </div>
       <div class="list-nav-m">
         <span>排序：</span>
@@ -32,22 +34,36 @@
           v-for="(item, index) of order"
           :key="index"
           @click="goorder(index)"
-        >{{ item }}</a>
+          >{{ item }}</a
+        >
       </div>
     </div>
     <div class="mv-list">
-      <div class="mv" v-for="(item, index) of nestMVList" :key="index" @click="goMvDetail(item.id)">
+      <div
+        class="mv"
+        v-for="(item, index) of nestMVList"
+        :key="index"
+        @click="goMvDetail(item.id)"
+      >
         <div class="img-posr">
           <div class="play-num">
             <i class="san"></i>
           </div>
-          <img :src="item.cover" alt class="mv-img" />
+          <img v-lazy="item.cover" alt class="mv-img" />
           <span class="play-num">播放量：{{ item.playCount }}</span>
         </div>
-        <a href="#" class="mv-name">{{ item.name }}</a>
-        <a href="#" class="artits-name">{{ item.artistName }}</a>
+        <a href="#" class="title-name">{{ item.name }}</a>
+        <a href="#" class="word-small">{{ item.artistName }}</a>
       </div>
     </div>
+    <el-pagination
+      @current-change="handleCurrentChange"
+      :current-page.sync="page"
+      :page-size="limit - 1"
+      layout="total, prev, pager, next"
+      :total="total"
+    >
+    </el-pagination>
   </div>
 </template>
 
@@ -69,9 +85,11 @@ export default {
       //排序
       order: ["上升最快", "最热", "最新"],
       //最大量
-      limit: "10",
+      limit: 12,
       //偏移量
-      page: 1
+      page: 1,
+
+      total: 0
     };
   },
   created() {
@@ -87,9 +105,10 @@ export default {
             //排序
             order: this.order[this.ordernum],
             //最大量
-            limit: 4,
+            limit: this.limit,
             //偏移量
-            page: 1
+            // page: this.page,
+            offset: (this.page - 1) * this.limit
           }
         })
         .then(res => {
@@ -101,6 +120,11 @@ export default {
               );
             }
           }
+          //总条数
+          //接口问题
+          if (res.data.count) {
+            this.total = res.data.count;
+          }
         })
         .catch(err => {
           alert("请求失败");
@@ -108,14 +132,17 @@ export default {
     },
     goarea(index) {
       this.areanum = index;
+      this.page = 1;
       this.mvData();
     },
     gotype(index) {
       this.typenum = index;
+      this.page = 1;
       this.mvData();
     },
     goorder(index) {
       this.typenum = index;
+      this.page = 1;
       this.mvData();
     },
 
@@ -123,6 +150,12 @@ export default {
     goMvDetail(id) {
       console.log(id);
       this.$router.push("/mvdetail?mvid=" + id);
+    },
+    //分页
+    handleCurrentChange(val) {
+      this.page = val;
+      this.mvData();
+      console.log("pagenum", val);
     }
   }
 };

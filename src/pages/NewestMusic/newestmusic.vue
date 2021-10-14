@@ -8,7 +8,8 @@
         v-for="(item, index) of styleMusic"
         :key="index"
         @click="gostyle(index)"
-      >{{ styleMusic[index].name }}</a>
+        >{{ styleMusic[index].name }}</a
+      >
     </div>
     <div class="music-table-box">
       <div class="music-th">
@@ -19,20 +20,26 @@
         <span class="ablum music-td">专辑</span>
         <span class="time music-td">时长</span>
       </div>
+
+      <Loading v-if="isLoading"></Loading>
       <div class="music-tr" v-for="(item, index) of newestMusic" :key="index">
         <span class="music-num music-td">{{ index + 1 }}</span>
         <div class="music-td music-picbox">
           <div class="music-play-sm">
-            <img :src="item.album.picUrl" />
-            <a href="javascript:;" class="a-play" @click="playMusic(item.id)">播放</a>
+            <img v-lazy="item.album.picUrl" />
+            <a href="javascript:;" class="a-play" @click="playMusic(item.id)"
+              >播放</a
+            >
           </div>
         </div>
         <div class="music-dl music-td">
           <h2 class="music-name">{{ item.name }}</h2>
           <i class="play-sm"></i>
-          <p class="music-p">{{ item.album.name }}</p>
+          <p class="word-small">{{ item.album.name }}</p>
         </div>
-        <div class="music-artisit music-td">{{ item.album.artists[0].name }}</div>
+        <div class="music-artisit music-td">
+          {{ item.album.artists[0].name }}
+        </div>
         <div class="ablum music-td">{{ item.album.name }}</div>
         <div class="time music-td">{{ item.duration }}</div>
       </div>
@@ -40,10 +47,13 @@
   </div>
 </template>
 <script>
+import Loading from "../../components/Loading.vue";
 export default {
   name: "newestMusic",
+  components: { Loading },
   data() {
     return {
+      isLoading: true,
       newestMusic: [],
       styleindex: 0, //   分类
       styleMusic: [
@@ -92,6 +102,9 @@ export default {
               this.newestMusic[i].duration
             );
           }
+          if (res.data.code == 200) {
+            this.isLoading = false;
+          }
         })
         .catch(err => {
           alert("请求失败");
@@ -111,7 +124,7 @@ export default {
         })
         .then(res => {
           let url = res.data.data[0].url;
-          this.$parent.$parent.musicUrl = url;
+          this.$parent.$parent.$parent.$parent.musicUrl = url;
         })
         .catch(err => {
           alert("请求失败");

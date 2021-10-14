@@ -8,7 +8,7 @@ import apiURL from "./api.js";
 // import cookie from "../../static/js/cookie.js";
 
 // axios默认配置
-axios.defaults.timeout = 10000; // 超时时间
+axios.defaults.timeout = 30000; // 超时时间
 axios.defaults.baseURL = apiURL; // 默认地址
 
 //整理数据
